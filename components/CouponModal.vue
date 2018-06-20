@@ -4,7 +4,6 @@
       <sui-loader content="Loading..." />
     </sui-dimmer>
     <sui-image
-      v-if="open"
       centered
       class="coupon-image"
       :src="image"
@@ -12,7 +11,7 @@
     >
     </sui-image>
     <div
-      v-if="open"
+      v-if="fill"
       class="barcode"
     >
     <sui-header size="small">{{start}} ~ {{end}}</sui-header>
@@ -36,6 +35,7 @@ export default {
     'open',
     'start',
     'end',
+    'fill',
   ],
   components: {
     'barcode': VueBarcode,

@@ -20,6 +20,7 @@
         :end="curCoupon.end"
         :loading="modalLoading"
         :open="modalOpen"
+        :fill="modalFill"
       />
       <div v-for="coupon in coupons" :key="coupon.pk">
         <coupon-list-element :img="coupon.img" @clickImage="() => showCouponCode(coupon.pk)" />
@@ -51,20 +52,20 @@ export default {
       curCoupon: {
         start: '',
         end: '',
-        img: '/',
+        img: 'placeholder.png',
         pin: '',
       },
       loading: false,
       modalOpen: false,
       modalLoading: false,
+      modalFill: false,
     }
   },
   methods: {
     showCouponCode: async function(pk) {
+      this.modalOpen = true;
       this.modalLoading = true;
-      this.loading = true;
       const coupon = await burger.getCouponCode(burger.generateUDID(), pk);
-      this.loading = false;
       this.modalLoading = false;
 
       this.curCoupon = {
@@ -74,7 +75,7 @@ export default {
         pin: coupon.pinNum,
       }
 
-      this.modalOpen = true;
+      this.modalFill = true;
     },
     getCouponList: async function() {
       this.loading = true;
