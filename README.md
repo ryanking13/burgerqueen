@@ -2,6 +2,8 @@
 
 버거킹 앱 쿠폰 생성 사이트
 
+<img src='./preview.gif' alt='preview' width=250/>
+
 ## When to use
 
 - 버거킹 앱 깔기가 귀찮을 때
