@@ -8,14 +8,15 @@
       centered
       class="coupon-image"
       :src="image"
-      size="large"
+      size="medium"
     >
     </sui-image>
     <div
+      v-if="open"
       class="barcode"
     >
+    <sui-header size="small">{{start}} ~ {{end}}</sui-header>
       <barcode
-        v-if="open"
         :value="pin"
       >
         ERROR
@@ -31,8 +32,10 @@ export default {
   props: [
     'image',
     'pin',
-    'open',
     'loading',
+    'open',
+    'start',
+    'end',
   ],
   components: {
     'barcode': VueBarcode,
@@ -44,8 +47,6 @@ export default {
 <style type="text/css">
 
 .barcode {
-  width: 50%;
-  margin: auto;
   text-align: center;
 }
 

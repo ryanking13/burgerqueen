@@ -1,6 +1,7 @@
 <template>
   <section class="container">
     <div>
+      <github-ribbon />
       <h1 class="title">
         BurgerQueen
       </h1>
@@ -9,7 +10,7 @@
         color="orange"
         @click="getCouponList"
       >Show Coupons</sui-button>
-      <sui-dimmer :active="loading" inverted>
+      <sui-dimmer :active="loading === true" inverted>
         <sui-loader content="Loading..." />
       </sui-dimmer>
       <coupon-modal
@@ -36,11 +37,13 @@
 import * as burger from '~/assets/burgerRequest'
 import CouponListElement from '~/components/CouponListElement'
 import CouponModal from '~/components/CouponModal'
+import GithubRibbon from '~/components/GithubRibbon'
 
 export default {
   components: {
     CouponListElement,
-    CouponModal
+    CouponModal,
+    GithubRibbon,
   },
   data() {
     return {
@@ -59,7 +62,9 @@ export default {
   methods: {
     showCouponCode: async function(pk) {
       this.modalLoading = true;
+      this.loading = true;
       const coupon = await burger.getCouponCode(burger.generateUDID(), pk);
+      this.loading = false;
       this.modalLoading = false;
 
       this.curCoupon = {
