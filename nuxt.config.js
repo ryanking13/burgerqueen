@@ -42,6 +42,6 @@ module.exports = {
     dir: 'docs',
   },
   router: {
-    base: '/burgerqueen/docs/'
+    base: '/burgerqueen/'
   }
 }
