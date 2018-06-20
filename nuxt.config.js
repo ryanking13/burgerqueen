@@ -40,5 +40,8 @@ module.exports = {
   ],
   generate: {
     dir: 'docs',
+  },
+  router: {
+    base: '/burgerqueen/'
   }
 }
