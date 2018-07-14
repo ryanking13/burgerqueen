@@ -9,6 +9,10 @@ const wrapCORS = (url) => {
   return 'https://cors.io/?' + url
 }
 
+const wrapCORS2 = (url) => {
+  return 'https://cors-anywhere.herokuapp.com/' + url
+}
+
 const formatParams = (params) => {
   return  Object.keys(params)
             .map(k => k + '=' + params[k])
@@ -38,9 +42,15 @@ export const getCouponList = (udid) => {
   }
 
   const url = wrapCORS(baseUrl + formatParams(params))
+  const urlAlt = wrapCORS2(baseUrl + formatParams(params))
   return fetch(url, { headers: headers })
           .then(res => res.json())
           .then(json => json.resultlist)
+          .catch(() => {
+            return fetch(urlAlt, { headers: headers })
+              .then(res => res.json())
+              .then(json => json.resultlist)
+          })
 }
 
 export const getCouponCode = (udid, couponPk) => {
@@ -54,8 +64,14 @@ export const getCouponCode = (udid, couponPk) => {
   }
 
   const url = wrapCORS(baseUrl + formatParams(params))
+  const urlAlt = wrapCORS2(baseUrl + formatParams(params))
 
   return fetch(url)
           .then(res => res.json())
           .then(json => json.resultMap.couponPinData)
+          .catch(() => {
+            return fetch(urlAlt, { headers: headers })
+              .then(res => res.json())
+              .then(json => json.resultMap.couponPinData)
+          })
 }
