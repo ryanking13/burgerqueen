@@ -43,5 +43,8 @@ module.exports = {
   },
   router: {
     base: '/burgerqueen/'
-  }
+  },
+  plugins: [
+    { src: '~plugins/ga.js', ssr: false }
+  ]
 }
