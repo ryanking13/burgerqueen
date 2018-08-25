@@ -5,11 +5,14 @@
       <h1 class="title">
         BurgerQueen
       </h1>
+      <h5 class="subtitle">
+        버거킹 앱 쿠폰 뷰어
+      </h5>
       <sui-button
         basic
         color="orange"
         @click="getCouponList"
-      >Show Coupons</sui-button>
+      >쿠폰 보기</sui-button>
       <sui-dimmer :active="loading === true" inverted>
         <sui-loader content="Loading..." />
       </sui-dimmer>
@@ -114,7 +117,7 @@ export default {
 
 .subtitle {
   font-weight: 300;
-  font-size: 42px;
+  font-size: 24px;
   color: #526488;
   word-spacing: 5px;
   padding-bottom: 15px;
