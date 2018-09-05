@@ -7,7 +7,7 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'BurgerEmperor' }
+      { hid: 'description', name: 'description', content: '버거킹 쿠폰 뷰어 BurgerKing Korea Coupon Viewer' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }

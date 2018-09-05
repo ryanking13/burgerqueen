@@ -1,7 +1,7 @@
 {
-  "name": "burger-emperor",
+  "name": "burgerqueen",
   "version": "1.0.0",
-  "description": "BurgerEmperor",
+  "description": "BurgerKing Coupon Viewer",
   "author": "sihadan <def6488@gmail.com>",
   "private": true,
   "scripts": {
