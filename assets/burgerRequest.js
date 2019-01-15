@@ -32,7 +32,7 @@ export const generateUDID = () => {
   return udid;
 };
 
-export const getCouponList = (udid) => {
+export const getCouponListCORS = (udid) => {
   const baseUrl = 'https://deliveryapp.co.kr/app/coupon/getCouponList.do?'
   const params = {
     udid,
@@ -53,7 +53,22 @@ export const getCouponList = (udid) => {
           })
 }
 
-export const getCouponCode = (udid, couponPk) => {
+export const getCouponList = (udid) => {
+  const apiUrl = 'https://burgerqueen-api.azurewebsites.net/api/couponlist?'
+  const params = {
+    udid,
+  }
+
+  const url = apiUrl + formatParams(params)
+
+  return fetch(url)
+          .then(res => res.json())
+          .catch(() => {
+            return getCouponListCORS(udid)
+          })
+}
+
+export const getCouponCodeCORS = (udid, couponPk) => {
   const baseUrl = 'https://deliveryapp.co.kr/app/coupon/getCouponPinData.do?'
   const params = {
     udid,
@@ -73,5 +88,21 @@ export const getCouponCode = (udid, couponPk) => {
             return fetch(urlAlt, { headers: headers })
               .then(res => res.json())
               .then(json => json.resultMap.couponPinData)
+          })
+}
+
+export const getCouponCode = (udid, couponPk) => {
+  const apiUrl = 'https://burgerqueen-api.azurewebsites.net/api/couponcode?'
+  const params = {
+    udid,
+    couponpk: couponPk,
+  }
+
+  const url = apiUrl + formatParams(params)
+
+  return fetch(url)
+          .then(res => res.json())
+          .catch(() => {
+            return getCouponCodeCORS(udid, couponPk)
           })
 }
