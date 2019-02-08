@@ -18,7 +18,8 @@
     "node-fetch": "^2.1.2",
     "nuxt": "^1.0.0",
     "semantic-ui-css": "^2.3.2",
-    "semantic-ui-vue": "^0.2.10"
+    "semantic-ui-vue": "^0.2.10",
+    "extend": ">=3.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
