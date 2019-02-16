@@ -19,7 +19,8 @@
     "nuxt": "^1.0.0",
     "semantic-ui-css": "^2.3.2",
     "semantic-ui-vue": "^0.2.10",
-    "extend": ">=3.0.2"
+    "extend": ">=3.0.2",
+    "lodash": ">=4.7.11"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
