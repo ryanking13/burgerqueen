@@ -106,3 +106,26 @@ export const getCouponCode = (udid, couponPk) => {
             return getCouponCodeCORS(udid, couponPk)
           })
 }
+
+export const getSurveyCode = (code) => {
+  const apiUrl = 'https://burgerqueen-api.azurewebsites.net/api/surveycode?'
+  const params = {
+    code,
+  }
+
+  const url = apiUrl + formatParams(params)
+
+  return fetch(url)
+          .then(res => {
+            if (!res.ok) return { 'failMessage': res.text() }
+            return res.json()
+          })
+          .catch(() => {
+            return { 'failMessage': 'Undefined Error' }
+          })
+}
+
+export const init = () => {
+  const apiUrl = 'https://burgerqueen-api.azurewebsites.net'
+  return fetch(apiUrl)
+}

@@ -8,26 +8,42 @@
       <h5 class="subtitle">
         버거킹 앱 쿠폰 뷰어
       </h5>
+      <div>
+        <sui-button
+          id="survey-button"
+          basic
+          color="green"
+          @click="openSurveyModal"
+        >영수증 쿠폰 받기(Beta)</sui-button>
+      </div>
       <sui-button
         basic
         color="orange"
         @click="getCouponList"
-      >쿠폰 보기</sui-button>
+      >앱 쿠폰 보기</sui-button>
       <sui-dimmer :active="loading === true" inverted>
-        <sui-loader content="Loading..." />
+        <sui-loader content="쿠폰 리스트를 읽어오는 중..." />
       </sui-dimmer>
       <coupon-modal
+        key="couponModal"
+        v-if="modalOpen"
         :image="curCoupon.img"
         :pin="curCoupon.pin"
         :start="curCoupon.start"
         :end="curCoupon.end"
         :loading="modalLoading"
-        :open="modalOpen"
+        :changeModalState="changeCouponModalState"
         :fill="modalFill"
       />
       <div v-for="coupon in coupons" :key="coupon.pk">
         <coupon-list-element :img="coupon.img" @clickImage="() => showCouponCode(coupon.pk)" />
       </div>
+      <survey-modal
+        v-if="surveyModalOpen"
+        :changeModalState="changeSurveyModalState"
+        :loading="surveyModalLoading"
+        :getCode="getSurveyCoupon"
+      />
     </div>
     <div>
 <!--       <sui-dimmer active inverted>
@@ -42,12 +58,14 @@ import * as burger from '~/assets/burgerRequest'
 import CouponListElement from '~/components/CouponListElement'
 import CouponModal from '~/components/CouponModal'
 import GithubRibbon from '~/components/GithubRibbon'
+import SurveyModal from '~/components/SurveyModal'
 
 export default {
   components: {
     CouponListElement,
     CouponModal,
     GithubRibbon,
+    SurveyModal,
   },
   data() {
     return {
@@ -62,6 +80,8 @@ export default {
       modalOpen: false,
       modalLoading: false,
       modalFill: false,
+      surveyModalOpen: false,
+      surveyModalLoading: false,
     }
   },
   methods: {
@@ -93,6 +113,32 @@ export default {
         }
       });
     },
+    getSurveyCoupon: async function(code) {
+      this.surveyModalLoading = true
+      const resp = await burger.getSurveyCode(code)
+      this.surveyModalLoading = false
+
+      if (typeof resp.valCode === 'undefined') {
+        return resp.failMessage
+      } else {
+        return resp.valCode
+      }
+    },
+    openSurveyModal: function() {
+      this.surveyModalOpen = true;
+    },
+    changeCouponModalState: function(val) {
+      this.modalOpen = val;
+    },
+    changeSurveyModalState: function(val) {
+      this.surveyModalOpen = val;
+    },
+  },
+  created() {
+    // do request to wake up azure functions instance
+    setTimeout(() => {
+      burger.init()
+    }, 0);
   }
 }
 </script>
@@ -125,5 +171,9 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+
+#survey-button {
+  margin: 20px;
 }
 </style>

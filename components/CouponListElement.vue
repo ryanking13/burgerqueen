@@ -6,6 +6,7 @@
       size="large"
     />
     <sui-button
+      key="coupon-button"
       class="coupon-button"
       color="orange"
       @click="onClick"

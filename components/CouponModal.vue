@@ -1,7 +1,7 @@
 <template>
   <sui-modal v-model="open">
     <sui-dimmer :active="loading" inverted>
-      <sui-loader content="Loading..." />
+      <sui-loader content="쿠폰을 받아오는 중..." />
     </sui-dimmer>
     <sui-image
       centered
@@ -32,16 +32,26 @@ export default {
     'image',
     'pin',
     'loading',
-    'open',
     'start',
     'end',
     'fill',
+    'changeModalState'
   ],
+  data() {
+    return {
+      open: true,
+    }
+  },
   components: {
     'barcode': VueBarcode,
+  },
+  watch: {
+    open: function(val) {
+      this.changeModalState(val)
+    }
   }
 }
-    
+
 </script>
 
 <style type="text/css">
