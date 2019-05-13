@@ -31,12 +31,15 @@
         :pin="curCoupon.pin"
         :start="curCoupon.start"
         :end="curCoupon.end"
+        :salePrice="curCoupon.salePrice"
+        :realPrice="curCoupon.realPrice"
+        :couponName="curCoupon.couponName"
         :loading="modalLoading"
         :changeModalState="changeCouponModalState"
         :fill="modalFill"
       />
       <div v-for="coupon in coupons" :key="coupon.pk">
-        <coupon-list-element :img="coupon.img" @clickImage="() => showCouponCode(coupon.pk)" />
+        <coupon-list-element :img="coupon.img" :pk="coupon.pk" :salePrice="coupon.salePrice" :realPrice="coupon.realPrice" :couponName="coupon.couponName" @clickImage="() => showCouponCode(coupon.pk)" />
       </div>
       <survey-modal
         v-if="surveyModalOpen"
@@ -74,7 +77,10 @@ export default {
         start: '',
         end: '',
         img: 'placeholder.png',
+        couponName: '',
         pin: '',
+        salePrice: '',
+        realPrice: '',
       },
       loading: false,
       modalOpen: false,
@@ -92,10 +98,17 @@ export default {
       this.modalLoading = false;
 
       this.curCoupon = {
-        start: coupon.couponStartDate,
-        end: coupon.couponEndDate,
-        img: 'https://deliveryapp.co.kr' + coupon.detailImgPath,
-        pin: coupon.pinNum,
+        start: coupon[0].dt_expiry_start,
+        end: coupon[0].dt_expiry_end,
+        img: coupon[0].img_app_url,
+        couponName: coupon[0].nm_cup_menu,
+        pin: coupon[0].pin_num_a,
+        salePrice: coupon[0].sale_cup_price,
+        realPrice: coupon[0].real_cup_price,
+        // start: coupon.couponStartDate,
+        // end: coupon.couponEndDate,
+        // img: 'https://deliveryapp.co.kr' + coupon.detailImgPath,
+        // pin: coupon.pinNum,
       }
 
       this.modalFill = true;
@@ -107,9 +120,14 @@ export default {
 
       this.coupons = couponList.map(c => {
         return {
-          pk: c.couponPk,
-          title: c.couponTitle,
-          img: 'https://deliveryapp.co.kr' + c.listImgPath,
+          img: c.IMG_APP_URL,
+          pk: c.CD_COUPON,
+          salePrice: c.SALE_CUP_PRICE,
+          realPrice: c.REAL_CUP_PRICE,
+          couponName: c.NM_CUP_MENU,
+          // pk: c.couponPk,
+          // title: c.couponTitle,
+          // img: 'https://deliveryapp.co.kr' + c.listImgPath,
         }
       });
     },
@@ -144,6 +162,8 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Quicksand|Roboto');
+
 .container {
   min-height: 100vh;
   display: flex;
@@ -156,7 +176,7 @@ export default {
   font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
   display: block;
   font-weight: 350;
-  font-size: 64px;
+  font-size: 56px;
   color: #B71C1C;
   letter-spacing: 1px;
 }

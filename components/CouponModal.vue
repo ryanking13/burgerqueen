@@ -14,6 +14,10 @@
       v-if="fill"
       class="barcode"
     >
+    <sui-header size="medium">{{couponName}}</sui-header>
+    <h2 is="sui-header" color="red">
+      <span style="color: grey;"><small><del>{{realPrice}}</del></small></span> {{salePrice}}
+    </h2>
     <sui-header size="small">{{start}} ~ {{end}}</sui-header>
       <barcode
         :value="pin"
@@ -35,6 +39,9 @@ export default {
     'start',
     'end',
     'fill',
+    'couponName',
+    'realPrice',
+    'salePrice',
     'changeModalState'
   ],
   data() {

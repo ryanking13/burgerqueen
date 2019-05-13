@@ -2,7 +2,8 @@ import fetch, { Headers } from 'node-fetch'
 const crypto = require('crypto')
 
 const headers = {
-  Referer: 'https://deliveryapp.co.kr'
+    'Host': 'app.burgerking.co.kr:443',
+    'User-Agent': 'Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36',
 }
 
 const wrapCORS = (url) => {
@@ -20,14 +21,15 @@ const formatParams = (params) => {
 }
 
 export const generateUDID = () => {
-  const rd = crypto.createHash('sha256').update(Math.random().toString()).digest('hex')
-  const udid = [
-    'ffffffff',
-    rd.slice(0, 4),
-    rd.slice(4, 8),
-    'ffff',
-    'ffff' + rd.slice(8, 16)
-  ].join('-')
+  const rd = crypto.createHash('sha512').update(Math.random().toString()).digest('hex')
+  // const udid = [
+  //   'ffffffff',
+  //   rd.slice(0, 4),
+  //   rd.slice(4, 8),
+  //   'ffff',
+  //   'ffff' + rd.slice(8, 16)
+  // ].join('-')
+  const udid = 'andn_' + rd
 
   return udid;
 };
@@ -69,7 +71,7 @@ export const getCouponList = (udid) => {
 }
 
 export const getCouponCodeCORS = (udid, couponPk) => {
-  const baseUrl = 'https://deliveryapp.co.kr/app/coupon/getCouponPinData.do?'
+  const baseUrl = 'http://ec2-52-79-88-56.ap-northeast-2.compute.amazonaws.com/bkr-omni/BKR4003.json'
   const params = {
     udid,
     couponPk,
@@ -126,6 +128,6 @@ export const getSurveyCode = (code) => {
 }
 
 export const init = () => {
-  const apiUrl = 'https://burgerqueen-api.azurewebsites.net'
+  const apiUrl = 'https://burgerqueen-api.azurewebsites.net/api/couponcode?'
   return fetch(apiUrl)
 }
