@@ -1,24 +1,18 @@
 import fetch, { Headers } from 'node-fetch'
 const crypto = require('crypto')
 
+// const baseUrl = "https://app.burgerking.co.kr" // sometimes fails with cloudflare proxy
+const baseUrl = "http://ec2-13-209-180-127.ap-northeast-2.compute.amazonaws.com"
+const corsBaseUrl = "https://cors.ryanking13.workers.dev"
+
 const headers = {
   'Host': 'app.burgerking.co.kr:443',
   'User-Agent': 'Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36',
   'Content-Type': 'application/x-www-form-urlencoded',
 }
 
-const wrapCORS = (url) => {
-  return 'https://cors.io/?' + url
-}
-
-const wrapCORS2 = (url) => {
-  return 'https://cors-anywhere.herokuapp.com/' + url
-}
-
-const formatParams = (params) => {
-  return Object.keys(params)
-    .map(k => k + '=' + params[k])
-    .join('&')
+const encode = (data) => {
+  return Object.entries(data).map(([key, val]) => `${key}=${val}`).join('&')
 }
 
 export const generateUDID = () => {
@@ -32,29 +26,9 @@ export const generateUDID = () => {
   // ].join('-')
   const udid = 'andn_' + rd
 
-  return udid;
-};
-
-export const getCouponListCORS = (udid) => {
-  const baseUrl = 'https://deliveryapp.co.kr/app/coupon/getCouponList.do?'
-  const params = {
-    udid,
-    appVersion: '3.0.9',
-    channel: '2',
-    delKingSe: '3',
-  }
-
-  const url = wrapCORS(baseUrl + formatParams(params))
-  const urlAlt = wrapCORS2(baseUrl + formatParams(params))
-  return fetch(url, { headers: headers })
-    .then(res => res.json())
-    .then(json => json.resultlist)
-    .catch(() => {
-      return fetch(urlAlt, { headers: headers })
-        .then(res => res.json())
-        .then(json => json.resultlist)
-    })
+  return udid
 }
+
 
 // export const getCouponList = (udid) => {
 //   const apiUrl = 'https://burgerqueen-api.azurewebsites.net/api/couponlist?'
@@ -72,8 +46,12 @@ export const getCouponListCORS = (udid) => {
 // }
 
 export const getCouponList = (udid) => {
-  const baseUrl = 'https://app.burgerking.co.kr/bkr-omni/BKR4001.json'
-  const apiUrl = 'https://cors.ryanking13.workers.dev/?u=' + baseUrl + '&host=' + headers.Host
+  const apiUrl = `${baseUrl}/bkr-omni/BKR4001.json`
+  const corsParams = {
+    u: apiUrl,
+    host: headers.Host,
+  }
+  const corsUrl = `${corsBaseUrl}/?${encode(corsParams)}`
 
   const params = {
     header: {
@@ -92,58 +70,66 @@ export const getCouponList = (udid) => {
     message: encodeURIComponent(JSON.stringify(params)),
   }
 
-  const searchParams = Object.entries(data).map(([key, val]) => `${key}=${val}`).join('&')
-
-  console.log(searchParams)
-
-  return fetch(apiUrl, {
+  return fetch(corsUrl, {
     method: 'POST',
     mode: 'cors',
     headers: headers,
-    body: searchParams,
+    body: encode(data),
   })
     .then(res => res.json())
     .then(json => json.body.couponList)
     .catch(() => "ERROR")
 }
 
-export const getCouponCodeCORS = (udid, couponPk) => {
-  const baseUrl = 'http://ec2-52-79-88-56.ap-northeast-2.compute.amazonaws.com/bkr-omni/BKR4003.json'
-  const params = {
-    udid,
-    couponPk,
-    appVersion: '3.0.9',
-    channel: '2',
-    couponPinPk: '0',
-  }
+// export const getCouponCode = (udid, couponPk) => {
+//   const apiUrl = 'https://burgerqueen-api.azurewebsites.net/api/couponcode?'
+//   const params = {
+//     udid,
+//     couponpk: couponPk,
+//   }
 
-  const url = wrapCORS(baseUrl + formatParams(params))
-  const urlAlt = wrapCORS2(baseUrl + formatParams(params))
+//   const url = apiUrl + formatParams(params)
 
-  return fetch(url)
-    .then(res => res.json())
-    .then(json => json.resultMap.couponPinData)
-    .catch(() => {
-      return fetch(urlAlt, { headers: headers })
-        .then(res => res.json())
-        .then(json => json.resultMap.couponPinData)
-    })
-}
+//   return fetch(url)
+//     .then(res => res.json())
+// }
 
 export const getCouponCode = (udid, couponPk) => {
-  const apiUrl = 'https://burgerqueen-api.azurewebsites.net/api/couponcode?'
+  const apiUrl = `${baseUrl}/bkr-omni/BKR4003.json`
+  const corsParams = {
+    u: apiUrl,
+    host: headers.Host,
+  }
+  const corsUrl = `${corsBaseUrl}/?${encode(corsParams)}`
+
   const params = {
-    udid,
-    couponpk: couponPk,
+    header: {
+      result: 'true',
+      trcode: 'BKR4003',
+      platform: '01',
+      is_cryption: 'false',
+    },
+    body: {
+      cd_coupon: couponPk,
+      no_pin: 'null',
+      fg_app: 'Y',
+      udid: udid,
+    }
   }
 
-  const url = apiUrl + formatParams(params)
+  const data = {
+    message: encodeURIComponent(JSON.stringify(params)),
+  }
 
-  return fetch(url)
+  return fetch(corsUrl, {
+    method: 'POST',
+    mode: 'cors',
+    headers: headers,
+    body: encode(data),
+  })
     .then(res => res.json())
-    .catch(() => {
-      return getCouponCodeCORS(udid, couponPk)
-    })
+    .then(json => json.body.result_data)
+    .catch(() => "ERROR")
 }
 
 export const getSurveyCode = (code) => {
@@ -152,7 +138,7 @@ export const getSurveyCode = (code) => {
     code,
   }
 
-  const url = apiUrl + formatParams(params)
+  const url = apiUrl + encode(params)
 
   return fetch(url)
     .then(res => {

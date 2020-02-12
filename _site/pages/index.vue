@@ -2,25 +2,12 @@
   <section class="container">
     <div>
       <github-ribbon />
-      <h1 class="title">
-        BurgerQueen
-      </h1>
-      <h5 class="subtitle">
-        버거킹 앱 쿠폰 뷰어
-      </h5>
+      <h1 class="title">BurgerQueen</h1>
+      <h5 class="subtitle">버거킹 앱 쿠폰 뷰어</h5>
       <div>
-        <sui-button
-          id="survey-button"
-          basic
-          color="green"
-          @click="openSurveyModal"
-        >영수증 쿠폰 받기(Beta)</sui-button>
+        <sui-button id="survey-button" basic color="green" @click="openSurveyModal">영수증 쿠폰 받기(Beta)</sui-button>
       </div>
-      <sui-button
-        basic
-        color="orange"
-        @click="getCouponList"
-      >앱 쿠폰 보기</sui-button>
+      <sui-button basic color="orange" @click="getCouponList">앱 쿠폰 보기</sui-button>
       <sui-dimmer :active="loading === true" inverted>
         <sui-loader content="쿠폰 리스트를 읽어오는 중..." />
       </sui-dimmer>
@@ -46,43 +33,43 @@
       />
     </div>
     <div>
-<!--       <sui-dimmer active inverted>
+      <!--       <sui-dimmer active inverted>
         <sui-loader content="Loading..." />
-      </sui-dimmer> -->
+      </sui-dimmer>-->
     </div>
   </section>
 </template>
 
 <script>
-import * as burger from '~/assets/burgerRequest'
-import CouponListElement from '~/components/CouponListElement'
-import CouponModal from '~/components/CouponModal'
-import GithubRibbon from '~/components/GithubRibbon'
-import SurveyModal from '~/components/SurveyModal'
+import * as burger from "~/assets/burgerRequest";
+import CouponListElement from "~/components/CouponListElement";
+import CouponModal from "~/components/CouponModal";
+import GithubRibbon from "~/components/GithubRibbon";
+import SurveyModal from "~/components/SurveyModal";
 
 export default {
   components: {
     CouponListElement,
     CouponModal,
     GithubRibbon,
-    SurveyModal,
+    SurveyModal
   },
   data() {
     return {
       coupons: [],
       curCoupon: {
-        start: '',
-        end: '',
-        img: 'placeholder.png',
-        pin: '',
+        start: "",
+        end: "",
+        img: "placeholder.png",
+        pin: ""
       },
       loading: false,
       modalOpen: false,
       modalLoading: false,
       modalFill: false,
       surveyModalOpen: false,
-      surveyModalLoading: false,
-    }
+      surveyModalLoading: false
+    };
   },
   methods: {
     showCouponCode: async function(pk) {
@@ -94,15 +81,15 @@ export default {
       this.curCoupon = {
         start: coupon.couponStartDate,
         end: coupon.couponEndDate,
-        img: 'https://deliveryapp.co.kr' + coupon.detailImgPath,
-        pin: coupon.pinNum,
-      }
+        img: "https://deliveryapp.co.kr" + coupon.detailImgPath,
+        pin: coupon.pinNum
+      };
 
       this.modalFill = true;
     },
     getCouponList: async function() {
       this.loading = true;
-      const couponList = await burger.getCouponList(burger.generateUDID())
+      const couponList = await burger.getCouponList(burger.generateUDID());
       this.loading = false;
 
       this.coupons = couponList.map(c => {
@@ -111,22 +98,22 @@ export default {
           pk: c.CD_COUPON,
           salePrice: c.SALE_CUP_PRICE,
           realPrice: c.REAL_CUP_PRICE,
-          couponName: c.NM_COUPON,
+          couponName: c.NM_COUPON
           // pk: c.couponPk,
           // title: c.couponTitle,
           // img: 'https://deliveryapp.co.kr' + c.listImgPath,
-        }
+        };
       });
     },
     getSurveyCoupon: async function(code) {
-      this.surveyModalLoading = true
-      const resp = await burger.getSurveyCode(code)
-      this.surveyModalLoading = false
+      this.surveyModalLoading = true;
+      const resp = await burger.getSurveyCode(code);
+      this.surveyModalLoading = false;
 
-      if (typeof resp.valCode === 'undefined') {
-        return resp.failMessage
+      if (typeof resp.valCode === "undefined") {
+        return resp.failMessage;
       } else {
-        return resp.valCode
+        return resp.valCode;
       }
     },
     openSurveyModal: function() {
@@ -137,15 +124,9 @@ export default {
     },
     changeSurveyModalState: function(val) {
       this.surveyModalOpen = val;
-    },
-  },
-  created() {
-    // do request to wake up azure functions instance
-    setTimeout(() => {
-      burger.init()
-    }, 0);
+    }
   }
-}
+};
 </script>
 
 <style>
@@ -158,11 +139,12 @@ export default {
 }
 
 .title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
+  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
   display: block;
   font-weight: 350;
   font-size: 64px;
-  color: #B71C1C;
+  color: #b71c1c;
   letter-spacing: 1px;
 }
 
