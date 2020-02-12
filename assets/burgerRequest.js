@@ -149,8 +149,3 @@ export const getSurveyCode = (code) => {
       return { 'failMessage': 'Undefined Error' }
     })
 }
-
-export const init = () => {
-  const apiUrl = 'https://burgerqueen-api.azurewebsites.net/api/couponcode?'
-  return fetch(apiUrl)
-}

@@ -2,25 +2,12 @@
   <section class="container">
     <div>
       <github-ribbon />
-      <h1 class="title">
-        BurgerQueen
-      </h1>
-      <h5 class="subtitle">
-        버거킹 앱 쿠폰 뷰어
-      </h5>
-      <div>
-        <sui-button
-          id="survey-button"
-          basic
-          color="green"
-          @click="openSurveyModal"
-        >영수증 쿠폰 받기(Beta)</sui-button>
-      </div>
-      <sui-button
-        basic
-        color="orange"
-        @click="getCouponList"
-      >앱 쿠폰 보기</sui-button>
+      <h1 class="title">BurgerQueen</h1>
+      <h5 class="subtitle">버거킹 앱 쿠폰 뷰어</h5>
+      <!-- <div>
+        <sui-button id="survey-button" basic color="green" @click="openSurveyModal">영수증 쿠폰 받기(Beta)</sui-button>
+      </div>-->
+      <sui-button basic color="orange" @click="getCouponList">앱 쿠폰 보기</sui-button>
       <sui-dimmer :active="loading === true" inverted>
         <sui-loader content="쿠폰 리스트를 읽어오는 중..." />
       </sui-dimmer>
@@ -39,7 +26,14 @@
         :fill="modalFill"
       />
       <div v-for="coupon in coupons" :key="coupon.pk">
-        <coupon-list-element :img="coupon.img" :pk="coupon.pk" :salePrice="coupon.salePrice" :realPrice="coupon.realPrice" :couponName="coupon.couponName" @clickImage="() => showCouponCode(coupon.pk)" />
+        <coupon-list-element
+          :img="coupon.img"
+          :pk="coupon.pk"
+          :salePrice="coupon.salePrice"
+          :realPrice="coupon.realPrice"
+          :couponName="coupon.couponName"
+          @clickImage="() => showCouponCode(coupon.pk)"
+        />
       </div>
       <survey-modal
         v-if="surveyModalOpen"
@@ -49,46 +43,46 @@
       />
     </div>
     <div>
-<!--       <sui-dimmer active inverted>
+      <!--       <sui-dimmer active inverted>
         <sui-loader content="Loading..." />
-      </sui-dimmer> -->
+      </sui-dimmer>-->
     </div>
   </section>
 </template>
 
 <script>
-import * as burger from '~/assets/burgerRequest'
-import CouponListElement from '~/components/CouponListElement'
-import CouponModal from '~/components/CouponModal'
-import GithubRibbon from '~/components/GithubRibbon'
-import SurveyModal from '~/components/SurveyModal'
+import * as burger from "~/assets/burgerRequest";
+import CouponListElement from "~/components/CouponListElement";
+import CouponModal from "~/components/CouponModal";
+import GithubRibbon from "~/components/GithubRibbon";
+import SurveyModal from "~/components/SurveyModal";
 
 export default {
   components: {
     CouponListElement,
     CouponModal,
     GithubRibbon,
-    SurveyModal,
+    SurveyModal
   },
   data() {
     return {
       coupons: [],
       curCoupon: {
-        start: '',
-        end: '',
-        img: 'placeholder.png',
-        couponName: '',
-        pin: '',
-        salePrice: '',
-        realPrice: '',
+        start: "",
+        end: "",
+        img: "placeholder.png",
+        couponName: "",
+        pin: "",
+        salePrice: "",
+        realPrice: ""
       },
       loading: false,
       modalOpen: false,
       modalLoading: false,
       modalFill: false,
       surveyModalOpen: false,
-      surveyModalLoading: false,
-    }
+      surveyModalLoading: false
+    };
   },
   methods: {
     showCouponCode: async function(pk) {
@@ -104,18 +98,18 @@ export default {
         couponName: coupon[0].nm_cup_menu,
         pin: coupon[0].pin_num_a,
         salePrice: coupon[0].sale_cup_price,
-        realPrice: coupon[0].real_cup_price,
+        realPrice: coupon[0].real_cup_price
         // start: coupon.couponStartDate,
         // end: coupon.couponEndDate,
         // img: 'https://deliveryapp.co.kr' + coupon.detailImgPath,
         // pin: coupon.pinNum,
-      }
+      };
 
       this.modalFill = true;
     },
     getCouponList: async function() {
       this.loading = true;
-      const couponList = await burger.getCouponList(burger.generateUDID())
+      const couponList = await burger.getCouponList(burger.generateUDID());
       this.loading = false;
 
       this.coupons = couponList.map(c => {
@@ -124,22 +118,22 @@ export default {
           pk: c.CD_COUPON,
           salePrice: c.SALE_CUP_PRICE,
           realPrice: c.REAL_CUP_PRICE,
-          couponName: c.NM_CUP_MENU,
+          couponName: c.NM_CUP_MENU
           // pk: c.couponPk,
           // title: c.couponTitle,
           // img: 'https://deliveryapp.co.kr' + c.listImgPath,
-        }
+        };
       });
     },
     getSurveyCoupon: async function(code) {
-      this.surveyModalLoading = true
-      const resp = await burger.getSurveyCode(code)
-      this.surveyModalLoading = false
+      this.surveyModalLoading = true;
+      const resp = await burger.getSurveyCode(code);
+      this.surveyModalLoading = false;
 
-      if (typeof resp.valCode === 'undefined') {
-        return resp.failMessage
+      if (typeof resp.valCode === "undefined") {
+        return resp.failMessage;
       } else {
-        return resp.valCode
+        return resp.valCode;
       }
     },
     openSurveyModal: function() {
@@ -150,19 +144,13 @@ export default {
     },
     changeSurveyModalState: function(val) {
       this.surveyModalOpen = val;
-    },
-  },
-  created() {
-    // do request to wake up azure functions instance
-    setTimeout(() => {
-      burger.init()
-    }, 0);
+    }
   }
-}
+};
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Open+Sans|Quicksand|Roboto');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Quicksand|Roboto");
 
 .container {
   min-height: 100vh;
@@ -173,11 +161,12 @@ export default {
 }
 
 .title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
+  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
   display: block;
   font-weight: 350;
   font-size: 56px;
-  color: #B71C1C;
+  color: #b71c1c;
   letter-spacing: 1px;
 }
 
