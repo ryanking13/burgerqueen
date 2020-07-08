@@ -4,9 +4,9 @@
       <github-ribbon />
       <h1 class="title">BurgerQueen</h1>
       <h5 class="subtitle">버거킹 앱 쿠폰 뷰어</h5>
-      <!-- <div>
+      <div>
         <sui-button id="survey-button" basic color="green" @click="openSurveyModal">영수증 쿠폰 받기(Beta)</sui-button>
-      </div>-->
+      </div>
       <sui-button basic color="orange" @click="getCouponList">앱 쿠폰 보기</sui-button>
       <sui-dimmer :active="loading === true" inverted>
         <sui-loader content="쿠폰 리스트를 읽어오는 중..." />
